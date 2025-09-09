@@ -15,9 +15,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    @Transactional
+    @Transactional(rollbackOn =  Exception.class)
     public User create(User user) {
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        if (true){
+            throw new RuntimeException("Rollback test");
+        }
+        return user;
     }
 
     @Override
