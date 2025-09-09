@@ -1,5 +1,7 @@
 package com.busra.springbootbasics.controller;
 
+import com.busra.springbootbasics.dto.request.UserRequest;
+import com.busra.springbootbasics.dto.response.UserResponse;
 import com.busra.springbootbasics.model.User;
 import com.busra.springbootbasics.service.UserService;
 import com.busra.springbootbasics.service.impl.UserServiceImpl;
@@ -15,17 +17,17 @@ public class UserController {
     private final UserServiceImpl userServiceImpl;
 
     @PostMapping("/create")
-    public User create(@RequestBody User user) {
-        return userServiceImpl.create(user);
+    public UserResponse create(@RequestBody UserRequest userRequest) {
+        return userServiceImpl.create(userRequest);
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<UserResponse> getAllUsers() {
         return userServiceImpl.getAllUsers();
     }
 
     @PutMapping("/update/{id}")
-    public User update(@PathVariable long id, @RequestBody User user) {
+    public UserResponse update(@PathVariable long id, @RequestBody User user) {
         return userServiceImpl.update(id, user);
     }
 

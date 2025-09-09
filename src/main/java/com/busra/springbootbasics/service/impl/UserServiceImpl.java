@@ -1,5 +1,7 @@
 package com.busra.springbootbasics.service.impl;
 
+import com.busra.springbootbasics.dto.request.UserRequest;
+import com.busra.springbootbasics.dto.response.UserResponse;
 import com.busra.springbootbasics.model.User;
 import com.busra.springbootbasics.repository.UserRepository;
 import com.busra.springbootbasics.service.UserService;
@@ -7,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,8 +19,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User create(User user) {
-        return userRepository.save(user);
+    public UserResponse create(UserRequest userRequest) {
+        User user = new User();
+        user.setUsername(userRequest.getUsername());
+        user.setPassword(userRequest.getPassword());
+        userRepository.save(user);
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.setMessage("Kullanıcı oluşturuldu");
+        return userResponse;
 /*
         if (true){
             throw new RuntimeException("Rollback test");
@@ -27,23 +37,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserResponse> userResponseList = new ArrayList<>();
+        for (User user : users) {
+            UserResponse userResponse = new UserResponse();
+            userResponse.setMessage("Kullanıcı Bilgileri: " + user.getUsername() + " | " + user.getEmail());
+            userResponseList.add(userResponse);
+        }
+        return userResponseList;
     }
 
     @Override
     @Transactional
-    public User update(long id, User user) {
+    public UserResponse update(long id, User user) {
         if (userRepository.findById(id).isPresent()) {
             User updatedUser = userRepository.findById(id).get();
             updatedUser.setUsername(user.getUsername());
             updatedUser.setPassword(user.getPassword());
             updatedUser.setEmail(user.getEmail());
             updatedUser.setPhone(user.getPhone());
-            return userRepository.save(updatedUser);
+            userRepository.save(updatedUser);
         } else {
             throw new RuntimeException("User with id " + id + " does not exist");
         }
+        UserResponse userResponse = new UserResponse();
+        userResponse.setMessage("Kullanıcı güncellendi");
+        return userResponse;
     }
 
     @Override
