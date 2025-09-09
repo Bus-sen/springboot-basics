@@ -3,6 +3,7 @@ package com.busra.springbootbasics.service.impl;
 import com.busra.springbootbasics.model.User;
 import com.busra.springbootbasics.repository.UserRepository;
 import com.busra.springbootbasics.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public User create(User user) {
         return userRepository.save(user);
     }
@@ -24,6 +26,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User update(long id, User user) {
         if (userRepository.findById(id).isPresent()) {
             User updatedUser = userRepository.findById(id).get();
