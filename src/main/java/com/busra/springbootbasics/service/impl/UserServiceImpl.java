@@ -63,6 +63,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse getUserById(Long id) {
+        User getUser =  userRepository.findById(id).get();
+        UserResponse userResponse = modelMapper.map(getUser, UserResponse.class);
+        userResponse.setMessage("Kullanıcı adı: " +getUser.getUsername()
+                + " | Mail adresi: " + getUser.getEmail() + " | Telefon no: " + getUser.getPhone());
+        return userResponse;
+    }
+
+
+    @Override
     @Transactional
     public UserResponse update(long id, User user) {
         User updatedUser = userRepository.findById(id)
